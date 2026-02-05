@@ -12,8 +12,26 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+// Modal===============================================
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
 // uuid=================================================
 import { v4 as uuidv4 } from "uuid";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 2,
+  color: "black",
+  direction: "rtl",
+};
 
 // Tasks Array=========================================
 let myTasks = [
@@ -44,16 +62,43 @@ const theme = createTheme({
       main: "#ed6c02",
     },
   },
+  typography: {
+    fontFamily: ["Alexandria"],
+  },
 });
 // Theme============================================
 
 function App() {
   const [tasks, setTasks] = useState(myTasks);
+  const [todo, setTodo] = useState({});
 
   useEffect(() => {
     let storageTasks = JSON.parse(localStorage.getItem("tasks")) ?? [];
     setTasks(storageTasks);
   }, []);
+
+  // Editing Modal============================
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  // Editing Modal Inputs======================
+  const [labelValue, setLabelValue] = useState("");
+  const [detailsValue, setDetailsValue] = useState("");
+
+  // Delete Modal==========================
+  const [openTwo, setOpenTwo] = useState(false);
+  const handleOpenTwo = () => setOpenTwo(true);
+  const handleCloseTwo = () => setOpenTwo(false);
+
+  // Delete================================================
+  function handleDelete(taskId) {
+    let newTasks = tasks.filter((task) => {
+      return task.id != taskId;
+    });
+    setTasks(newTasks);
+    localStorage.setItem("tasks", JSON.stringify(newTasks));
+  }
 
   // Toggle Start=========================
 
@@ -82,7 +127,17 @@ function App() {
   // TasksList Start==================================
 
   let tasksList = tasks.map((task) => {
-    return <Task key={task.id} task={task} />;
+    return (
+      <Task
+        key={task.id}
+        task={task}
+        handleOpen={handleOpen}
+        setLabelValue={setLabelValue}
+        setDetailsValue={setDetailsValue}
+        setTodo={setTodo}
+        handleOpenTwo={handleOpenTwo}
+      />
+    );
   });
 
   // TasksList End=====================================
@@ -111,6 +166,105 @@ function App() {
     <ThemeProvider theme={theme}>
       <TasksContext value={{ tasks, setTasks }}>
         <Container maxWidth="sm">
+          {/*========= Updating Modal Start ========*/}
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h5" component="h2">
+                تعديل المهمة
+              </Typography>
+              <TextField
+                id="standard-basic"
+                label="العنوان"
+                variant="standard"
+                style={{ width: "100%", marginTop: "10px" }}
+                value={labelValue}
+                onChange={(e) => {
+                  setLabelValue(e.target.value);
+                }}
+              />
+              <TextField
+                id="standard-basic"
+                label="التفاصيل"
+                variant="standard"
+                style={{ width: "100%", marginTop: "10px" }}
+                value={detailsValue}
+                onChange={(e) => {
+                  setDetailsValue(e.target.value);
+                }}
+              />
+              <div style={{ textAlign: "left", marginTop: "10px" }}>
+                <Button
+                  onClick={handleClose}
+                  style={{ fontSize: "20px", padding: "0" }}
+                  color="primary"
+                >
+                  الغاء
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleClose();
+                    let newTasks = tasks.map((t) => {
+                      if (t.id == todo.id) {
+                        t.title = labelValue;
+                        t.details = detailsValue;
+                      }
+                      return t;
+                    });
+                    setTasks(newTasks);
+                    localStorage.setItem("tasks", JSON.stringify(newTasks));
+                  }}
+                  style={{ fontSize: "20px", padding: "0" }}
+                  color="primary"
+                >
+                  تعديل
+                </Button>
+              </div>
+            </Box>
+          </Modal>
+          {/*========= Updating Modal End ========*/}
+
+          {/*========= Delete Modal Start ===========*/}
+
+          <Modal
+            open={openTwo}
+            onClose={handleCloseTwo}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h5" component="h2">
+                هل انت متأكد من رغبتك في حذف المهمة؟
+              </Typography>
+              <p>لا يمكنك التراجع عن الحذف بعد اتمامه</p>
+              <div style={{ textAlign: "left", marginTop: "10px" }}>
+                <Button
+                  onClick={handleCloseTwo}
+                  style={{ fontSize: "20px", padding: "0" }}
+                  color="primary"
+                >
+                  اغلاق
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleCloseTwo();
+                    handleDelete(todo.id);
+                  }}
+                  style={{ fontSize: "20px", padding: "0" }}
+                  color="primary"
+                >
+                  نعم قم بالحذف
+                </Button>
+              </div>
+            </Box>
+          </Modal>
+
+          {/*========= Delete Modal End ===========*/}
+
           <Box
             sx={{
               p: 1,

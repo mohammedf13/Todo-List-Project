@@ -41,3 +41,28 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Font */
+@font-face {
+  font-family: Alexandria;
+  src: url("../public/fonts/Alexandria-Regular.ttf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Alexandria;
+  src: url("../public/fonts/Alexandria-Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Alexandria;
+  src: url("../public/fonts/Alexandria-Black.ttf");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: Alexandria;
+  src: url("../public/fonts/Alexandria-Light.ttf");
+  font-weight: 300;
+}

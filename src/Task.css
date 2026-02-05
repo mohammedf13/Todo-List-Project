@@ -1,0 +1,52 @@
+.task-box {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  background-color: #283593;
+  color: white;
+  padding: 20px;
+  transition: 0.2s;
+  border-radius: 5px;
+}
+
+.task-box:hover {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.4);
+}
+
+.task-title,
+.task-details {
+  text-align: right;
+}
+
+.task-details {
+  margin: 0 !important;
+}
+
+/* Icon buttons styles */
+.icon-btn {
+  padding: 12px !important;
+  background: white !important;
+  border: 2px solid #07fb07 !important;
+  color: #07fb07 !important;
+}
+.icon-btn:hover {
+  background: #b1a9a9 !important;
+}
+
+.icon-btn--blue {
+  color: blue !important;
+  border-color: blue !important;
+}
+
+.icon-btn--red {
+  color: red !important;
+  border-color: red !important;
+}
+
+.icon-btn--check {
+  background-color: #07fb07 !important;
+  color: white !important;
+  border-color: white !important;
+}
